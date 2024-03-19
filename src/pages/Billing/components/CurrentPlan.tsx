@@ -12,7 +12,7 @@ import {
   AlertDialogFooter,
   Box,
 } from "@chakra-ui/react";
-import { Plan } from "common/types";
+import { Plan, PricingData } from "common/types";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import React, { useRef, useState } from "react";
@@ -27,6 +27,7 @@ const CurrentPlan: React.FC<{
   packageName: string;
   packageRechargeDate: string;
   packageValidity: number;
+  pricing: PricingData;
   plan: Plan;
   subscription?: {
     end_date: string;
@@ -41,6 +42,7 @@ const CurrentPlan: React.FC<{
   packageRechargeDate,
   packageValidity,
   plan,
+  pricing,
   isCancellable,
   subscription,
   upgradePlan,
@@ -197,6 +199,7 @@ const CurrentPlan: React.FC<{
         isCancellable={isCancellable}
         packageRechargeDate={packageRechargeDate}
         plan={plan}
+        pricing={pricing}
         open={open}
         onModalClose={onModalClose}
       />

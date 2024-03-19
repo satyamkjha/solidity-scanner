@@ -18,7 +18,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import React from "react";
-import { Plan } from "common/types";
+import { Plan, PricingData } from "common/types";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import SubscriptionDataContainer from "./SubscriptionDataContainer";
 import PricingDetailsList from "pages/Pricing/components/PricingDetailsList";
@@ -34,11 +34,13 @@ const PlanDetailsModal: React.FC<{
   packageRechargeDate: string;
   subscription: boolean;
   plan: Plan;
+  pricing: PricingData;
 }> = ({
   open: isOpen,
   onModalClose,
   currentPackage,
   duration,
+  pricing,
   plan,
   packageRechargeDate,
   subscription,
@@ -122,7 +124,7 @@ const PlanDetailsModal: React.FC<{
             </Flex>
             <Divider mb={10} />
             <TableContainer width="100%">
-              {pricing_table_data.map((table) => (
+              {pricing.pricing_table_data.map((table) => (
                 <Table mb={20} border="none" variant="unstyled" width="100%">
                   <Thead width="100%">
                     <Tr width="100%">

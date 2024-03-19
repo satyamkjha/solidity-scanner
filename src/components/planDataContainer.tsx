@@ -338,6 +338,7 @@ export const PlanDataContainer: React.FC<{
             </Button>
           </HStack>
           <PlanDetailsModal
+            pricing={pricingPlans}
             isCancellable={profileData.is_cancellable}
             subscription={profileData.is_cancellable}
             currentPackage={profileData.current_package}

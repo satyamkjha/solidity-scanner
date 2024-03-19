@@ -213,6 +213,7 @@ const Billing: React.FC = () => {
                 >
                   {profileData.current_package === "custom" ? (
                     <CurrentPlan
+                      pricing={plans}
                       subscription={profileData.subscription}
                       isCancellable={profileData.is_cancellable}
                       billingCycle={planBillingCycle}
@@ -240,6 +241,7 @@ const Billing: React.FC = () => {
                       profileData.current_package
                     ] && (
                       <CurrentPlan
+                        pricing={plans}
                         subscription={profileData.subscription}
                         isCancellable={profileData.is_cancellable}
                         billingCycle={planBillingCycle}

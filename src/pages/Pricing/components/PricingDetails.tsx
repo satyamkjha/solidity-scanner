@@ -270,7 +270,7 @@ const PricingDetails: React.FC<{
         </Flex> */}
         <PricingTable
           pricing_data={pricingDetails.pricing_data}
-          pricing_table_data={pricing_table_data}
+          pricing_table_data={pricingDetails.pricing_table_data}
         />
       </Suspense>
     </Flex>
