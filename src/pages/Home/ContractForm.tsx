@@ -222,6 +222,7 @@ const ContractForm: React.FC<{
     <Flex
       flexDir="column"
       px={2}
+      w="100%"
       h={["90vh", "90vh", "78vh"]}
       justifyContent={"space-between"}
       alignItems="center"
