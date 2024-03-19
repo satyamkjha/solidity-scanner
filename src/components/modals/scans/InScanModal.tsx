@@ -126,7 +126,7 @@ const InScanModal: React.FC<{
                       {inScanDetails.scan_state.length > 25
                         ? inScanDetails.scan_state
                         : inScanDetails.scan_status ||
-                          "This scan has failed, lost credits will be reimbursed in a few minutes. Please contact support"}
+                          "This scan has failed, lost LOC will be reimbursed in a few minutes. Please contact support"}
                     </Text>
                   </Box>
                 )}
@@ -251,7 +251,7 @@ export const ScanTitleComponent: React.FC<{
               <ExternalLinkIcon ml={2} />
             </Text>
           </Flex>
-        ) : (
+        ) : scanData.project_url !== "File Scan" ? (
           <Flex
             w="100%"
             justifyContent={["center", "center", "flex-start"]}
@@ -282,6 +282,10 @@ export const ScanTitleComponent: React.FC<{
               </Link>
             )}
           </Flex>
+        ) : (
+          <Text fontSize={["xs", "xs", "sm"]} fontWeight={400}>
+            File Scan
+          </Text>
         )}
       </VStack>
     </Flex>

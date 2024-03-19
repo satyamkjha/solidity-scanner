@@ -329,7 +329,7 @@ const Layout: React.FC = ({ children }) => {
                   bgColor="#FFFCF7"
                   display={["none", "none", "flex"]}
                   borderRadius={20}
-                  w="400px"
+                  maxW="400px"
                   px={5}
                   cursor="pointer"
                   spacing={5}
