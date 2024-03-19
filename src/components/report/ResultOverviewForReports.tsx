@@ -141,26 +141,28 @@ const ResultOverviewReports: React.FC<{
               flexDir={["row"]}
               color={"#8A94A6"}
             >
-              <Link
-                href={
-                  (projectDetails.project_url !== "File Scan" &&
-                    projectDetails.project_url) ||
-                  projectDetails.project_url
-                }
-                target={"_blank"}
-                fontSize={download ? "sm" : ["xs", "xs", "sm"]}
-                fontWeight={400}
-                textDecoration={"none"}
-              >
-                {projectDetails.project_url === "File Scan"
-                  ? "File Scan"
-                  : "View on" +
+              {projectDetails.project_url !== "File Scan" ? (
+                <Link
+                  href={projectDetails.project_url}
+                  target={"_blank"}
+                  fontSize={download ? "sm" : ["xs", "xs", "sm"]}
+                  fontWeight={400}
+                >
+                  {"View on" +
                     " " +
                     sentenceCapitalize(
                       getProjectType(projectDetails.project_url)
                     )}
-                <ExternalLinkIcon ml={download ? 2 : [0, 1, 2]} />
-              </Link>
+                  <ExternalLinkIcon ml={download ? 2 : [0, 1, 2]} />
+                </Link>
+              ) : (
+                <Text
+                  fontSize={download ? "sm" : ["xs", "xs", "sm"]}
+                  fontWeight={400}
+                >
+                  File Scan
+                </Text>
+              )}
             </Flex>
           )}
         </VStack>
