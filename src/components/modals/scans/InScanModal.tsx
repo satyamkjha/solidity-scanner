@@ -260,25 +260,27 @@ export const ScanTitleComponent: React.FC<{
             flexDir={["row"]}
             color={"#8A94A6"}
           >
-            <Link
-              href={
-                (scanData.project_url !== "File Scan" &&
-                  scanData.project_url) ||
-                scanData.project_url
-              }
-              target={"_blank"}
-              fontSize={"sm"}
-              isTruncated
-              fontWeight={400}
-              textDecoration={"none"}
-            >
-              {scanData.project_url === "File Scan"
-                ? "File Scan"
-                : "View on" +
-                  " " +
-                  sentenceCapitalize(getProjectType(scanData.project_url))}
-              <ExternalLinkIcon ml={2} />
-            </Link>
+            {scanData.project_url !== "File Scan" && (
+              <Link
+                href={
+                  (scanData.project_url !== "File Scan" &&
+                    scanData.project_url) ||
+                  scanData.project_url
+                }
+                target={"_blank"}
+                fontSize={"sm"}
+                isTruncated
+                fontWeight={400}
+                textDecoration={"none"}
+              >
+                {scanData.project_url === "File Scan"
+                  ? "File Scan"
+                  : "View on" +
+                    " " +
+                    sentenceCapitalize(getProjectType(scanData.project_url))}
+                <ExternalLinkIcon ml={2} />
+              </Link>
+            )}
           </Flex>
         )}
       </VStack>
