@@ -73,8 +73,12 @@ const LinkInput: React.FC<
   };
 
   return (
-    <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
-      <InputGroup alignItems="center">
+    <VStack
+      maxW="600px"
+      alignItems={"flex-start"}
+      justifyContent={"flex-start"}
+    >
+      <InputGroup alignItems="center" maxW="600px">
         {showLeftIcon && (
           <InputLeftElement
             height="48px"

@@ -284,6 +284,7 @@ const Profile: React.FC = () => {
                     value={contactNumber}
                     onChange={(e) => {
                       setContactNumber(e.target.value);
+                      console.log(e.target.value);
                     }}
                     onError={(e: any) =>
                       setErrors((prv) => {

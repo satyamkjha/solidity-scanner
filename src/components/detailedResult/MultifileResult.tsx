@@ -216,6 +216,11 @@ const MultifileResult: React.FC<{
             duration: 3000,
             isClosable: true,
           });
+          if (comment)
+            setFiles({
+              ...files,
+              comment: comment,
+            });
           refetch();
         }
 

@@ -92,8 +92,13 @@ const PasswordInput: React.FC<
   };
 
   return (
-    <VStack w={"100%"} alignItems={"flex-start"} justifyContent={"flex-start"}>
-      <InputGroup alignItems="center">
+    <VStack
+      w={"100%"}
+      maxW="600px"
+      alignItems={"flex-start"}
+      justifyContent={"flex-start"}
+    >
+      <InputGroup alignItems="center" maxW="600px">
         {showLeftIcon && (
           <InputLeftElement
             height="48px"

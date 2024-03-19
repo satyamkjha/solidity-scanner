@@ -205,6 +205,7 @@ const UploadForm: React.FC<{
             project_type: "new",
           },
         });
+        queryClient.invalidateQueries("profile");
         history.push("/projects");
         setIsLoading(false);
         onClose();

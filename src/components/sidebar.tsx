@@ -258,7 +258,7 @@ const Sidebar: React.FC<{
         >
           <CredshieldsIcon size={90} />
           <Button mt={[5, 5, 5, 7]} px={5} variant="dark" onClick={onOpen}>
-            <Text fontSize="xs"> Request manual audit</Text>
+            <Text fontSize="xs"> Request Manual Audit</Text>
           </Button>
         </Box>
         <HStack justifyContent="flex-start" mt={3} spacing={5}>
