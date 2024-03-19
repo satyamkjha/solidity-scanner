@@ -287,7 +287,7 @@ export const PricingCard: React.FC<{
                   <Flex ml={4}>
                     <CurlyArrowBlue size={50} />
                   </Flex>
-                  <Flex alignItems="flex-end" mt={-1} ml={-2}>
+                  <Flex alignItems="flex-end" mt={-3} ml={-2}>
                     <Text fontSize={"xs"} color="#3300FF" fontWeight={900}>
                       You Save&nbsp;
                     </Text>
@@ -308,6 +308,7 @@ export const PricingCard: React.FC<{
           flexDir={"column"}
           alignItems={"flex-start"}
           justifyContent={"flex-start"}
+          mt={2}
         >
           <PricingDetailsList
             plan={planDetails}
