@@ -427,22 +427,6 @@ const ErrorHandler: React.FC = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
 
-  // console.log(getCookieExpiration("csrftoken"));
-
-  useEffect(() => {
-    const interceptor = API.interceptors.request.use(
-      (config) => {
-        // Check if CSRF token expiration time is set and token has expired
-        console.log("asdas");
-        return config;
-      },
-      (error) => {
-        // If there's an error with the request, just return the error
-        return Promise.reject(error);
-      }
-    );
-  }, []);
-
   useEffect(() => {
     const interceptor = API.interceptors.response.use(
       (response) => {
