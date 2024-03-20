@@ -78,6 +78,19 @@ const QuickScan: React.FC = () => {
   // };
 
   useEffect(() => {
+    if (ref) {
+      localStorage.setItem("campaign_type", ref);
+      localStorage.setItem("campaign_id", ref);
+      sessionStorage.setItem("ref", ref);
+    } else if (
+      !localStorage.getItem("campaign_id") &&
+      !localStorage.getItem("campaign_type")
+    ) {
+      const campaign_type = query.get("utm_source") || "quickscan";
+      const campaign_id = query.get("utm_campaign") || "quickscan";
+      localStorage.setItem("campaign_type", campaign_type);
+      localStorage.setItem("campaign_id", campaign_id);
+    }
     if (blockAddress && blockChain && blockPlatform) {
       setQSStatus("Validated");
       setIsLoading(true);
