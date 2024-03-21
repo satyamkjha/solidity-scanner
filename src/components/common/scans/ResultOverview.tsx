@@ -18,6 +18,8 @@ import {
 } from "helpers/helperFunction";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
+import { useLocation } from "react-router-dom";
+import { url } from "inspector";
 
 const ResultOverview: React.FC<{
   type?: "project" | "block";
@@ -35,6 +37,26 @@ const ResultOverview: React.FC<{
   page = "qs",
 }) => {
   const assetsUrl = getAssetsURL();
+
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const ref = query.get("ref");
+
+  const onViewContractUrl = () => {
+    let urlLink = projectDetails.contract_url;
+    if (
+      ref &&
+      ref === "avascan" &&
+      projectDetails.contract_platform === "avalanche"
+    ) {
+      if (projectDetails.contract_chain === "mainnet") {
+        urlLink = `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`;
+      } else if (projectDetails.contract_chain === "testnet") {
+        urlLink = `https://testnet.avascan.info/blockchain/c/address/${projectDetails.contract_address}`;
+      }
+    }
+    window.open(urlLink, "_blank");
+  };
 
   return (
     <VStack w="100%" spacing={spacing}>
@@ -129,9 +151,7 @@ const ResultOverview: React.FC<{
                 fontSize="md"
                 mr={2}
                 cursor="pointer"
-                onClick={() =>
-                  window.open(projectDetails.contract_url, "_blank")
-                }
+                onClick={onViewContractUrl}
               >
                 {`View on ${sentenceCapitalize(
                   projectDetails.contract_platform || " "
