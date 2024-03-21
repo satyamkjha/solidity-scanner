@@ -139,7 +139,7 @@ const ResultOverview: React.FC<{
                     ref &&
                       ref === "avascan" &&
                       projectDetails.contract_platform === "avalanche"
-                      ? projectDetails.chain === "mainnet"
+                      ? projectDetails.contract_chain === "mainnet"
                         ? `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`
                         : projectDetails.contract_chain === "testnet"
                         ? `https://testnet.avascan.info/blockchain/c/address/${projectDetails.contract_address}`
