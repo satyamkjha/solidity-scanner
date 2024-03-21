@@ -19,6 +19,7 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 import { useLocation } from "react-router-dom";
+import { url } from "inspector";
 
 const ResultOverview: React.FC<{
   type?: "project" | "block";
@@ -42,23 +43,19 @@ const ResultOverview: React.FC<{
   const ref = query.get("ref");
 
   const onViewContractUrl = () => {
+    let urlLink = projectDetails.contract_url;
     if (
       ref &&
       ref === "avascan" &&
       projectDetails.contract_platform === "avalanche"
     ) {
       if (projectDetails.contract_chain === "mainnet") {
-        window.open(
-          `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`,
-          "_blank"
-        );
+        urlLink = `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`;
       } else if (projectDetails.contract_chain === "testnet") {
-        window.open(
-          `https://testnet.avascan.info/blockchain/c/address/${projectDetails.contract_address}`,
-          "_blank"
-        );
-      } else window.open(projectDetails.contract_url, "_blank");
-    } else window.open(projectDetails.contract_url, "_blank");
+        urlLink = `https://testnet.avascan.info/blockchain/c/address/${projectDetails.contract_address}`;
+      }
+    }
+    window.open(urlLink, "_blank");
   };
 
   return (
