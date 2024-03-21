@@ -502,7 +502,7 @@ const MultifileResult: React.FC<{
       <Flex w="100%" sx={{ flexDir: ["column", "column", "column", "row"] }}>
         <VStack
           w={["100%", "100%", "100%", "40%"]}
-          h={["100%", "100%", "100%", "625px"]}
+          h={["100%", "100%", "100%", "calc(100vh - 300px)"]}
           spacing={4}
           mb={[8, 8, 8, 0]}
           pr={[0, 0, 0, 4]}
