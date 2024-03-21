@@ -2317,3 +2317,11 @@ export const packageLabel: { [key: string]: string } = {
   expired: "Expired",
   individual: "Individual",
 };
+
+export const filterParamLabel: { [key: string]: string } = {
+  block: "Verified Contract",
+  github: "Github Project",
+  gitlab: "Gitlab Project",
+  bitbucket: "Bitbucket Project",
+  "File Scan": "Uploaded Contract",
+};

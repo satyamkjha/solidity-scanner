@@ -33,7 +33,7 @@ import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
-import { inProcessScanStates } from "common/values";
+import { inProcessScanStates, filterParamLabel } from "common/values";
 import { AddProject } from "components/common/AddProject";
 import InScanModal from "components/modals/scans/InScanModal";
 import { MdCancel } from "react-icons/md";
@@ -636,7 +636,10 @@ const Scans: React.FC = () => {
             width="95px"
             mb={5}
           />
-          <Text fontSize="sm">No projects scanned yet.</Text>
+          <Text fontSize="sm">
+            No {paramType ? filterParamLabel[paramType] : "projects"} scanned
+            yet.
+          </Text>
           {/* <Link to="/home">
             <Button variant="brand" width={["90%", "250px", "350px"]} my={8}>
               Add a New Project
