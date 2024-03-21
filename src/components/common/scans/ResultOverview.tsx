@@ -41,6 +41,26 @@ const ResultOverview: React.FC<{
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
 
+  const onViewContractUrl = () => {
+    if (
+      ref &&
+      ref === "avascan" &&
+      projectDetails.contract_platform === "avalanche"
+    ) {
+      if (projectDetails.contract_chain === "mainnet") {
+        window.open(
+          `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`,
+          "_blank"
+        );
+      } else if (projectDetails.contract_chain === "testnet") {
+        window.open(
+          `https://testnet.avascan.info/blockchain/c/address/${projectDetails.contract_address}`,
+          "_blank"
+        );
+      } else window.open(projectDetails.contract_url, "_blank");
+    } else window.open(projectDetails.contract_url, "_blank");
+  };
+
   return (
     <VStack w="100%" spacing={spacing}>
       <Flex
@@ -134,20 +154,7 @@ const ResultOverview: React.FC<{
                 fontSize="md"
                 mr={2}
                 cursor="pointer"
-                onClick={() =>
-                  window.open(
-                    ref &&
-                      ref === "avascan" &&
-                      projectDetails.contract_platform === "avalanche"
-                      ? projectDetails.contract_chain === "mainnet"
-                        ? `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`
-                        : projectDetails.contract_chain === "testnet"
-                        ? `https://testnet.avascan.info/blockchain/c/address/${projectDetails.contract_address}`
-                        : projectDetails.contract_url
-                      : projectDetails.contract_url,
-                    "_blank"
-                  )
-                }
+                onClick={onViewContractUrl}
               >
                 {`View on ${sentenceCapitalize(
                   projectDetails.contract_platform || " "
