@@ -33,7 +33,7 @@ import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
-import { inProcessScanStates } from "common/values";
+import { inProcessScanStates, filterParamLabel } from "common/values";
 import { AddProject } from "components/common/AddProject";
 import InScanModal from "components/modals/scans/InScanModal";
 import { MdCancel } from "react-icons/md";
@@ -504,7 +504,10 @@ const Scans: React.FC = () => {
                           as={MdCancel}
                           color={"#8A94A6"}
                           cursor={"pointer"}
-                          onClick={() => setSearchTerm("")}
+                          onClick={() => {
+                            setIsProjectsLoading(true);
+                            setSearchTerm("");
+                          }}
                         />
                       ) : null}
                       <Menu placement={"bottom-end"} matchWidth>
@@ -607,7 +610,18 @@ const Scans: React.FC = () => {
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
         </Flex>
-      ) : profileData.projects_remaining === 0 && projectList.length === 0 ? (
+      ) : searchTerm && projectList.length === 0 ? (
+        <Flex
+          w="100%"
+          h="70vh"
+          direction="column"
+          justifyItems="center"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text fontSize="sm">No projects found matching your query.</Text>
+        </Flex>
+      ) : projectList.length === 0 ? (
         <Flex
           w="100%"
           h="70vh"
@@ -622,23 +636,15 @@ const Scans: React.FC = () => {
             width="95px"
             mb={5}
           />
-          <Text fontSize="sm">No projects scanned yet.</Text>
+          <Text fontSize="sm">
+            No {paramType ? filterParamLabel[paramType] : "projects"} scanned
+            yet.
+          </Text>
           {/* <Link to="/home">
             <Button variant="brand" width={["90%", "250px", "350px"]} my={8}>
               Add a New Project
             </Button>
           </Link> */}
-        </Flex>
-      ) : projectList.length === 0 ? (
-        <Flex
-          w="100%"
-          h="70vh"
-          direction="column"
-          justifyItems="center"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Text fontSize="sm">No projects found matching your query.</Text>
         </Flex>
       ) : (
         <Flex

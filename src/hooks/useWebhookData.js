@@ -166,27 +166,17 @@ export const WebSocketProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData, keepWSOpen, webSocket, Auth.isUserAuthenticated()]);
 
-  // const processQueue = () => {
-  //   setMessageQueue([...messageQueue, ...tempMessageQueue]);
-  //   setTempMessageQueue(emptyArray);
-  // };
-
-  // const debouncedMsgInfusion = debounce(processQueue, 100);
-
-  // useEffect(() => {
-  //   if (tempMessageQueue.length !== 0) {
-  //     debouncedMsgInfusion();
-  //   }
-
-  //   return () => {
-  //     debouncedMsgInfusion.cancel();
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [tempMessageQueue]);
-
   const sendMessage = (msg) => {
     if (wsReadyState === 1) {
-      emitMessages(msg);
+      if (checkAuthToken) emitMessages(msg);
+      else {
+        emitMessages({
+          type: "auth_token_register",
+          body: {
+            auth_token: profileData.auth_token,
+          },
+        });
+      }
     } else {
       setKeepWSOpen(true);
       setTempEmitMsgQueue([...tempEmitMsgQueue, msg]);
