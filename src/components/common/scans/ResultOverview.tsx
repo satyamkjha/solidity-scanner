@@ -136,8 +136,14 @@ const ResultOverview: React.FC<{
                 cursor="pointer"
                 onClick={() =>
                   window.open(
-                    ref && ref === "avascan"
-                      ? `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`
+                    ref &&
+                      ref === "avascan" &&
+                      projectDetails.contract_platform === "avalanche"
+                      ? projectDetails.chain === "mainnet"
+                        ? `https://avascan.info/blockchain/c/address/${projectDetails.contract_address}`
+                        : projectDetails.contract_chain === "testnet"
+                        ? `https://testnet.avascan.info/blockchain/c/address/${projectDetails.contract_address}`
+                        : projectDetails.contract_url
                       : projectDetails.contract_url,
                     "_blank"
                   )
