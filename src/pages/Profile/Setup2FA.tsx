@@ -30,6 +30,7 @@ import { TwoFAField } from "components/common/TwoFAField";
 import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
 import { useHistory } from "react-router-dom";
+import { CopyIcon, CheckIcon } from "@chakra-ui/icons";
 
 export const Setup2FA: React.FC<{
   onClose(): any;
@@ -45,6 +46,8 @@ export const Setup2FA: React.FC<{
 
   const history = useHistory();
   const queryClient = useQueryClient();
+
+  const [copied, setCopied] = useState(false);
 
   const verify2FA = async (otp: string) => {
     try {
@@ -67,6 +70,17 @@ export const Setup2FA: React.FC<{
       console.log(e);
       setIsLoading(false);
     }
+  };
+
+  const onCopyLink = () => {
+    setCopied(true);
+    navigator.clipboard.writeText(two_factor_hash).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      },
+      () => console.log("Could not copy to clipboard")
+    );
   };
 
   return (
@@ -150,7 +164,19 @@ export const Setup2FA: React.FC<{
                     <PopoverArrow />
                     <PopoverCloseButton />
                     <PopoverHeader>Your Two Factor Secret</PopoverHeader>
-                    <PopoverBody>{two_factor_hash}</PopoverBody>
+                    <PopoverBody>
+                      <HStack>
+                        <Text textAlign="left" w="90%" textOverflow="">
+                          {two_factor_hash}
+                        </Text>
+
+                        {copied ? (
+                          <CheckIcon cursor="pointer" color="#38CB89" />
+                        ) : (
+                          <CopyIcon cursor="pointer" onClick={onCopyLink} />
+                        )}
+                      </HStack>
+                    </PopoverBody>
                   </PopoverContent>
                 </Popover>{" "}
                 the to manually configure your authenticator app.

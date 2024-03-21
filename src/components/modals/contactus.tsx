@@ -80,7 +80,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           maxW={["90vw", "90vw", "70vw"]}
           minW={"300px"}
           bg="bg.subtle"
-          minH={"fit-content"}
+          h={"85vh"}
+          overflowY="scroll"
         >
           <form
             style={{
