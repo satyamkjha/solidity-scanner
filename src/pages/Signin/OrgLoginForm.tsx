@@ -161,6 +161,7 @@ const OrgLoginForm: React.FC<{
                 <PasswordInput
                   isRequired
                   showLeftIcon
+                  enableSpecialCharCheck={false}
                   value={password}
                   placeholder="Password"
                   onChange={(event) => setPassword(event.target.value)}
