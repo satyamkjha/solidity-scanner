@@ -132,7 +132,7 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <Box as="div" height="100vh">
-      {isBannerOpen && (
+      {isBannerOpen && getFeatureGateConfig().top_banner_data.enabled && (
         <MotionFlex
           initial={{ height: 0 }}
           animate={{ height: "25px" }}
@@ -144,34 +144,53 @@ const Layout: React.FC = ({ children }) => {
           }}
         >
           <HStack justifyContent="center" w="calc(100% - 30px)">
-            <Text
-              cursor="pointer"
-              fontSize="12px"
-              color="white"
-              onClick={() =>
-                window.open(
-                  "https://proof-of-security.solidityscan.com/",
-                  "_blank"
-                )
-              }
-              fontWeight={700}
-            >
-              Proof of Security Summit'24 - India
-            </Text>
-            <Text fontSize="12px" color="white" fontWeight={700}>
-              |
-            </Text>
-            <Text
-              cursor="pointer"
-              fontSize="12px"
-              color="white"
-              fontWeight={700}
-              onClick={() =>
-                window.open("https://lu.ma/ProofofsecurityDubai", "_blank")
-              }
-            >
-              Register here
-            </Text>
+            {getFeatureGateConfig().top_banner_data.banner_data.first_col && (
+              <Text
+                cursor="pointer"
+                fontSize="12px"
+                color="white"
+                onClick={() =>
+                  window.open(
+                    getFeatureGateConfig().top_banner_data.banner_data.first_col
+                      .link,
+                    "_blank"
+                  )
+                }
+                fontWeight={700}
+              >
+                {
+                  getFeatureGateConfig().top_banner_data.banner_data.first_col
+                    .text
+                }
+              </Text>
+            )}
+            {getFeatureGateConfig().top_banner_data.banner_data.second_col &&
+              getFeatureGateConfig().top_banner_data.banner_data.second_col
+                .enabled && (
+                <>
+                  <Text fontSize="12px" color="white" fontWeight={700}>
+                    |
+                  </Text>
+                  <Text
+                    cursor="pointer"
+                    fontSize="12px"
+                    color="white"
+                    fontWeight={700}
+                    onClick={() =>
+                      window.open(
+                        getFeatureGateConfig().top_banner_data.banner_data
+                          .second_col.link,
+                        "_blank"
+                      )
+                    }
+                  >
+                    {
+                      getFeatureGateConfig().top_banner_data.banner_data
+                        .second_col.text
+                    }
+                  </Text>
+                </>
+              )}
           </HStack>
           <CloseIcon
             mr="10px"

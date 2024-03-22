@@ -17,9 +17,9 @@ export const LatestHacks: React.FC = () => {
   }[] = [
     {
       articleLink:
-        "https://blog.solidityscan.com/starsarena-hack-analysis-e71d78704e85?source=rss----3e911405e793---4",
-      articleHeading: "StarsArena",
-      articleDate: "Fri, 13 Oct 2023",
+        "https://blog.solidityscan.com/mimspell-hack-analysis-05ffcde475f6?source=rss----3e911405e793---4",
+      articleHeading: "MIMSpell",
+      articleDate: "Mon, 12 Feb 2024",
     },
     {
       articleLink:
