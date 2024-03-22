@@ -59,7 +59,7 @@ const PasswordInput: React.FC<
           (type) => !strength.contains.includes(type)
         );
 
-        if (strength.id === 0) {
+        if (enableSpecialCharCheck && strength.id === 0) {
           return "Weak password. Please use a stronger one.";
         } else if (enableSpecialCharCheck && missingCharTypes.length > 0) {
           return `Password must include ${missingCharTypes.join(
