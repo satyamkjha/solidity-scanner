@@ -9,9 +9,11 @@ const MotionFlex = motion(Flex);
 const TopBanner: React.FC = () => {
   const [isBannerOpen, setIsBannerOpen] = useState(true);
 
+  const topBannerData = getFeatureGateConfig().top_banner_data;
+
   return (
     <>
-      {isBannerOpen && getFeatureGateConfig().top_banner_data.enabled && (
+      {isBannerOpen && topBannerData.enabled && (
         <MotionFlex
           initial={{ height: 0 }}
           animate={{ height: "25px" }}
@@ -23,29 +25,24 @@ const TopBanner: React.FC = () => {
           }}
         >
           <HStack justifyContent="center" w="calc(100% - 30px)">
-            {getFeatureGateConfig().top_banner_data.banner_data.first_col && (
+            {topBannerData.banner_data.first_col && (
               <Text
                 cursor="pointer"
                 fontSize="12px"
                 color="white"
                 onClick={() =>
                   window.open(
-                    getFeatureGateConfig().top_banner_data.banner_data.first_col
-                      .link,
+                    topBannerData.banner_data.first_col.link,
                     "_blank"
                   )
                 }
                 fontWeight={700}
               >
-                {
-                  getFeatureGateConfig().top_banner_data.banner_data.first_col
-                    .text
-                }
+                {topBannerData.banner_data.first_col.text}
               </Text>
             )}
-            {getFeatureGateConfig().top_banner_data.banner_data.second_col &&
-              getFeatureGateConfig().top_banner_data.banner_data.second_col
-                .enabled && (
+            {topBannerData.banner_data.second_col &&
+              topBannerData.banner_data.second_col.enabled && (
                 <>
                   <Text fontSize="12px" color="white" fontWeight={700}>
                     |
@@ -57,16 +54,12 @@ const TopBanner: React.FC = () => {
                     fontWeight={700}
                     onClick={() =>
                       window.open(
-                        getFeatureGateConfig().top_banner_data.banner_data
-                          .second_col.link,
+                        topBannerData.banner_data.second_col.link,
                         "_blank"
                       )
                     }
                   >
-                    {
-                      getFeatureGateConfig().top_banner_data.banner_data
-                        .second_col.text
-                    }
+                    {topBannerData.banner_data.second_col.text}
                   </Text>
                 </>
               )}
