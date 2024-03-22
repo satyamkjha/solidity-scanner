@@ -97,7 +97,8 @@ export const ManualAuditForm: React.FC<{
         <ModalContent
           maxW={["90vw", "90vw", "75vw"]}
           minW={"300px"}
-          minH={"fit-content"}
+          h={"85vh"}
+          overflowY="scroll"
           borderRadius="15px"
           mb={10}
         >

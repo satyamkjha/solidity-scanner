@@ -20,6 +20,7 @@ import {
   Heading,
   PopoverBody,
   HStack,
+  useClipboard,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
@@ -30,6 +31,7 @@ import { TwoFAField } from "components/common/TwoFAField";
 import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
 import { useHistory } from "react-router-dom";
+import { CopyIcon, CheckIcon } from "@chakra-ui/icons";
 
 export const Setup2FA: React.FC<{
   onClose(): any;
@@ -45,6 +47,7 @@ export const Setup2FA: React.FC<{
 
   const history = useHistory();
   const queryClient = useQueryClient();
+  const { onCopy, hasCopied } = useClipboard(two_factor_hash);
 
   const verify2FA = async (otp: string) => {
     try {
@@ -150,7 +153,19 @@ export const Setup2FA: React.FC<{
                     <PopoverArrow />
                     <PopoverCloseButton />
                     <PopoverHeader>Your Two Factor Secret</PopoverHeader>
-                    <PopoverBody>{two_factor_hash}</PopoverBody>
+                    <PopoverBody>
+                      <HStack>
+                        <Text textAlign="left" w="90%" textOverflow="">
+                          {two_factor_hash}
+                        </Text>
+
+                        {hasCopied ? (
+                          <CheckIcon cursor="pointer" color="#38CB89" />
+                        ) : (
+                          <CopyIcon cursor="pointer" onClick={onCopy} />
+                        )}
+                      </HStack>
+                    </PopoverBody>
                   </PopoverContent>
                 </Popover>{" "}
                 the to manually configure your authenticator app.

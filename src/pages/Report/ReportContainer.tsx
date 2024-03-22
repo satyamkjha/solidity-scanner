@@ -51,13 +51,13 @@ export const ReportContainer: React.FC<{
   isPublicReport: boolean;
   needsTokenValidation?: boolean;
   isQSReport?: boolean;
-  onDemandReport?: boolean;
+  restrictedReport?: boolean;
   profile?: Profile;
 }> = ({
   summary_report,
   isPublicReport,
   profile,
-  onDemandReport = false,
+  restrictedReport = false,
   isQSReport = false,
   needsTokenValidation = false,
 }) => {
@@ -735,9 +735,9 @@ export const ReportContainer: React.FC<{
     }
 
     Object.keys(
-      isQSReport || onDemandReport ? filteredIssues : issuesObj
+      isQSReport || restrictedReport ? filteredIssues : issuesObj
     ).forEach((key, index) => {
-      if (isQSReport || onDemandReport) {
+      if (isQSReport || restrictedReport) {
         filteredIssues[key].issue_details.forEach((issue) => {
           const splitResult = getVulnerabilityDetailSplit(issue);
           if (splitResult) {

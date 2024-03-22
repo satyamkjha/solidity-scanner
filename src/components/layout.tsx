@@ -40,6 +40,7 @@ import { usePricingPlans } from "hooks/usePricingPlans";
 import { PlanDataContainer } from "./planDataContainer";
 import { CloseIcon } from "@chakra-ui/icons";
 import DowntimeAlertModal from "./modals/DowntimeAlertModal";
+import TopBanner from "./topBanner";
 
 const MotionFlex = motion(Flex);
 
@@ -57,8 +58,6 @@ const Layout: React.FC = ({ children }) => {
   );
 
   // const [isBannerOpen, setIsBannerOpen] = useState(true);
-
-  const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -132,101 +131,7 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <Box as="div" height="100vh">
-      {profileData && (
-        <>
-          {profileData.current_package === "expired" && (
-            <MotionFlex
-              initial={{ height: 0 }}
-              animate={{ height: "auto" }}
-              sx={{
-                w: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                py: 1,
-                bg: "red.500",
-              }}
-            >
-              <HStack justifyContent="center" w="calc(100% - 30px)">
-                <Text fontSize="12px" color="white" fontWeight={700}>
-                  Your package has expired. To renew your package
-                </Text>
-                <Link
-                  as={RouterLink}
-                  to="/billing"
-                  color="white"
-                  textDecor="underline"
-                  fontWeight="700"
-                  fontSize="12px"
-                  ml="3px"
-                  mt="1px"
-                >
-                  click here.
-                </Link>
-              </HStack>
-              <CloseIcon
-                mr="10px"
-                cursor="pointer"
-                fontSize="13px"
-                color="white"
-                onClick={() => setIsBannerOpen(false)}
-              />
-            </MotionFlex>
-          )}
-        </>
-        // ) : (
-        //   isBannerOpen && (
-        //     <MotionFlex
-        //       initial={{ height: 0 }}
-        //       animate={{ height: "25px" }}
-        //       sx={{
-        //         w: "100%",
-        //         justifyContent: "center",
-        //         py: 1,
-        //         bg: "brand-dark",
-        //       }}
-        //     >
-        //       <HStack justifyContent="center" w="calc(100% - 30px)">
-        //         <Text
-        //           cursor="pointer"
-        //           fontSize="12px"
-        //           color="white"
-        //           onClick={() =>
-        //             window.open(
-        //               "https://proofofsecurity.solidityscan.com/",
-        //               "_blank"
-        //             )
-        //           }
-        //           fontWeight={700}
-        //         >
-        //           Proof of Security Summit'23 - India
-        //         </Text>
-        //         <Text fontSize="12px" color="white" fontWeight={700}>
-        //           |
-        //         </Text>
-        //         <Text
-        //           cursor="pointer"
-        //           fontSize="12px"
-        //           color="white"
-        //           fontWeight={700}
-        //           onClick={() =>
-        //             window.open("https://lu.ma/x3063d6n", "_blank")
-        //           }
-        //         >
-        //           Register here
-        //         </Text>
-        //       </HStack>
-        //       <CloseIcon
-        //         mr="10px"
-        //         cursor="pointer"
-        //         fontSize="13px"
-        //         color="white"
-        //         onClick={() => setIsBannerOpen(false)}
-        //       />
-        //     </MotionFlex>
-        //   )
-        // )}
-        //  </>
-      )}
+      <TopBanner />
       <Flex
         sx={{
           width: "100%",
@@ -242,7 +147,7 @@ const Layout: React.FC = ({ children }) => {
             width: isSidebarCollapsed
               ? SIDEBAR_WIDTH_COLLAPSED
               : SIDEBAR_WIDTH_EXPANDED,
-            height: "calc(100vh)",
+            height: "calc(100vh - 25px)",
             transform: showSidebar
               ? "translate3d(0px,0px,0px)"
               : "translate3d(-280px,0,0px)",
@@ -274,7 +179,7 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               `calc(100% - ${SIDEBAR_WIDTH_COLLAPSED})`,
             ],
-            height: "calc(100vh)",
+            height: "calc(100vh - 25px)",
             overflowY: "scroll",
             overflowX: "hidden",
           }}
