@@ -168,14 +168,18 @@ export const WebSocketProvider = ({ children }) => {
 
   const sendMessage = (msg) => {
     if (wsReadyState === 1) {
-      if (checkAuthToken) emitMessages(msg);
-      else {
-        emitMessages({
-          type: "auth_token_register",
-          body: {
-            auth_token: profileData.auth_token,
-          },
-        });
+      if (needAuthToken) {
+        if (checkAuthToken) emitMessages(msg);
+        else {
+          emitMessages({
+            type: "auth_token_register",
+            body: {
+              auth_token: profileData.auth_token,
+            },
+          });
+        }
+      } else {
+        emitMessages(msg);
       }
     } else {
       setKeepWSOpen(true);
