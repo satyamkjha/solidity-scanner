@@ -23,57 +23,51 @@ export const LatestHacks: React.FC = () => {
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/exactly-protocol-hack-analysis-6ebc99d3e7b1?source=rss----3e911405e793---4",
-      articleHeading: "Exactly Protocol",
-      articleDate: "Mon, 09 Oct 2023",
+        "https://blog.solidityscan.com/socket-gateway-hack-analysis-b0e9567f7d3e?source=rss----3e911405e793---4",
+      articleHeading: "Socket Gatewaygo",
+      articleDate: "Thu, 18 Jan 2024",
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/banana-token-hack-analysis-3f6f84c08b8f?source=rss----3e911405e793---4",
-      articleHeading: "Banana Token",
-      articleDate: "Tue, 12 Sep 2023",
+        "https://blog.solidityscan.com/wise-lending-hack-analysis-f652f389e397?source=rss----3e911405e793---4",
+      articleHeading: "Wise Lending",
+      articleDate: "Tue, 16 Jan 2024",
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/dappsocial-hack-analysis-3b8bf243a850?source=rss----3e911405e793---4",
-      articleHeading: "DAppSocial",
-      articleDate: "Fri, 08 Sep 2023",
+        "https://blog.solidityscan.com/gamma-hack-analysis-6c074e61709e?source=rss----3e911405e793---4",
+      articleHeading: "Gamma Hack",
+      articleDate: "Tue, 09 Jan 2024",
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/zunami-protocol-hack-analysis-e95981976e11?source=rss----3e911405e793---4",
-      articleHeading: "Zunami Protocol",
-      articleDate: "Tue, 05 Sep 2023",
+        "https://blog.solidityscan.com/radiant-capital-hack-analysis-b300ebdeee29?source=rss----3e911405e793---4",
+      articleHeading: "Radiant Capital",
+      articleDate: "Mon, 08 Jan 2024",
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/earningfarm-hack-analysis-f5eba2a1e080?source=rss----3e911405e793---4",
-      articleHeading: "EarningFarm",
-      articleDate: "Thu, 24 Aug 2023",
+        "https://blog.solidityscan.com/orbit-chain-hack-analysis-b71c36a54a69?source=rss----3e911405e793---4",
+      articleHeading: "Orbit Chain",
+      articleDate: "Wed, 03 Jan 2024",
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/uwerx-hack-analysis-f03b061bb07b?source=rss----3e911405e793---4",
-      articleHeading: "Uwerx",
-      articleDate: "Tue, 08 Aug 2023",
+        "https://blog.solidityscan.com/pine-protocol-hack-analysis-7ce8621f444b?source=rss----3e911405e793---4",
+      articleHeading: "Pine Protocol",
+      articleDate: "Tue, 02 Jan 2024",
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/jpegd-hack-analysis-a5a3dc89fa4?source=rss----3e911405e793---4",
-      articleHeading: "JPEG’d",
-      articleDate: "Mon, 07 Aug 2023",
+        "https://blog.solidityscan.com/transit-finance-hack-analysis-998400e2bd0c?source=rss----3e911405e793---4",
+      articleHeading: "Transit Finance",
+      articleDate: "Fri, 29 Dec 2023",
     },
     {
       articleLink:
-        "https://blog.solidityscan.com/platypus-hack-analysis-a7d2f6d1f96e?source=rss----3e911405e793---4",
-      articleHeading: "Platypus",
-      articleDate: "Thu, 03 Aug 2023",
-    },
-    {
-      articleLink:
-        "https://blog.solidityscan.com/ffist-hack-analysis-9cb695c0fad9?source=rss----3e911405e793---4",
-      articleHeading: "$FFIST",
-      articleDate: "Fri, 28 Jul 2023 ",
+        "https://blog.solidityscan.com/thestandard-io-hack-analysis-e9d74aede42e?source=rss----3e911405e793---4",
+      articleHeading: "TheStandard.io",
+      articleDate: "Mon, 04 Dec 2023",
     },
   ];
 
