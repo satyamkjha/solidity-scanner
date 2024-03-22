@@ -13,7 +13,6 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { LOCInfoContainer } from "components/locInfoContainer";
 import { ScanTitleComponent } from "./InScanModal";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 

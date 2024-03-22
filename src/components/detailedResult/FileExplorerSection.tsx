@@ -318,7 +318,7 @@ export const FileExplorerSection: React.FC<{
               justifyContent: "center",
               flexDir: "column",
               alignItems: "center",
-              h: "625px",
+              h: "calc(100vh - 320px)",
               borderRadius: 15,
             }}
           >

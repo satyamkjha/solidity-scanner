@@ -52,6 +52,7 @@ const Profile: React.FC = () => {
   const toast = useToast();
   const [isEditable, setEditable] = useState(false);
   const [emailSend, setEmailSend] = useState(false);
+  const [emailSentMsg, setEmailSentMsg] = useState("");
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -118,7 +119,8 @@ const Profile: React.FC = () => {
         email: metaMaskEmail,
       });
       setIsLoading(false);
-      if (data.status === "success") {
+      if (data && data.status && data.status === "success") {
+        setEmailSentMsg(data.message);
         setEmailSend(true);
         toast({
           title: "Verification email sent",
@@ -149,8 +151,9 @@ const Profile: React.FC = () => {
       }
     );
 
-    if (data.status === "success") {
+    if (data && data.status && data.status === "success") {
       setEmailSend(true);
+      setEmailSentMsg(data.message);
       toast({
         title: "Verification email sent",
         description: `We've sent a link to your email ${metaMaskEmail}.`,
@@ -388,8 +391,10 @@ const Profile: React.FC = () => {
                   </Stack>
                   {emailSend && (
                     <Text color="success" my={2}>
-                      <Icon as={FiCheck} /> email sent successfully. Check your
-                      inbox for verification link.
+                      <Icon as={FiCheck} />{" "}
+                      {emailSentMsg
+                        ? emailSentMsg
+                        : "Email sent successfully. Check your inbox for verification link."}
                     </Text>
                   )}
                 </FormControl>

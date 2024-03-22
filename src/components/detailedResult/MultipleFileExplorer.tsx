@@ -80,7 +80,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
         bg: "rgba(243, 243, 243, 0.75)",
         position: "relative",
         w: "100%",
-        h: ["650px", "650px", "650px", "565px"],
+        h: ["650px", "650px", "650px", "calc(100vh - 360px)"],
         mb: [3, 3, 3, 0],
       }}
     >

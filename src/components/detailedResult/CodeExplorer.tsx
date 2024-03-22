@@ -58,7 +58,7 @@ const CodeExplorer: React.FC<{
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDir: "column",
-        h: ["600px", "600px", "600px", "505px"],
+        h: ["600px", "600px", "600px", "calc(100vh - 420px)"],
         overflow: "hidden",
         pl: "15px",
       }}

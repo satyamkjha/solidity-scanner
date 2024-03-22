@@ -24,6 +24,7 @@ import { useUserRole } from "hooks/useUserRole";
 import { AddProject } from "components/common/AddProject";
 import ImportScanModal from "components/modals/scans/ImportScanModal";
 import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -122,19 +123,35 @@ const Home: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [open, setOpen] = useState(false);
   const [importData, setImportData] = useState<any>();
+  const [projectsExceededModal, setProjectsExceededModal] = useState(false);
 
   useEffect(() => {
     if (profileData) {
       const import_scan_details = getRecentQuickScan();
       if (import_scan_details && import_scan_details.loc !== null) {
-        if (profileData.current_package === "trial") {
-          if (profileData.projects_remaining < 2)
-            importQuickScan(import_scan_details);
-          else {
+        if (profileData.credit_system === "loc") {
+          if (profileData.current_package === "trial") {
+            if (profileData.trial_projects_remaining === 0) {
+              setImportData(import_scan_details);
+              setProjectsExceededModal(true);
+            } else {
+              importQuickScan(import_scan_details);
+            }
+          } else {
+            setImportData(import_scan_details);
+            if (profileData.loc_remaining >= import_scan_details.loc) {
+              onOpen();
+            } else {
+              setOpen(true);
+            }
           }
         } else {
-          setImportData(import_scan_details);
-          if (profileData.credit_system === "loc") {
+          if (profileData.current_package === "trial") {
+            if (profileData.trial_projects_remaining < 2) {
+              importQuickScan(import_scan_details);
+            }
+          } else {
+            setImportData(import_scan_details);
             if (profileData.loc_remaining >= import_scan_details.loc) {
               onOpen();
             } else {
@@ -390,6 +407,17 @@ const Home: React.FC = () => {
         >
           <Loader />
         </Flex>
+      )}
+
+      {importData && (
+        <ProjectsExceededModal
+          open={projectsExceededModal}
+          closeModal={() => setProjectsExceededModal(false)}
+          scanDetails={{
+            ...importData,
+            scan_type: "block",
+          }}
+        />
       )}
 
       {importData ? (
