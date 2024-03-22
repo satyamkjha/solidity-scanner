@@ -52,6 +52,7 @@ const Profile: React.FC = () => {
   const toast = useToast();
   const [isEditable, setEditable] = useState(false);
   const [emailSend, setEmailSend] = useState(false);
+  const [emailSentMsg, setEmailSentMsg] = useState("");
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -111,8 +112,6 @@ const Profile: React.FC = () => {
     setUpdateLoading(false);
   };
 
-  const [emailSentMsg, setEmailSentMsg] = useState("");
-
   const updateEmail = async () => {
     if (metaMaskEmail) {
       setIsLoading(true);
@@ -120,7 +119,7 @@ const Profile: React.FC = () => {
         email: metaMaskEmail,
       });
       setIsLoading(false);
-      if (data.status && data.status === "success") {
+      if (data && data.status && data.status === "success") {
         setEmailSentMsg(data.message);
         setEmailSend(true);
         toast({
@@ -152,7 +151,7 @@ const Profile: React.FC = () => {
       }
     );
 
-    if (data.status && data.status === "success") {
+    if (data && data.status && data.status === "success") {
       setEmailSend(true);
       setEmailSentMsg(data.message);
       toast({

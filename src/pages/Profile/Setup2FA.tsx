@@ -20,6 +20,7 @@ import {
   Heading,
   PopoverBody,
   HStack,
+  useClipboard,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
@@ -46,8 +47,7 @@ export const Setup2FA: React.FC<{
 
   const history = useHistory();
   const queryClient = useQueryClient();
-
-  const [copied, setCopied] = useState(false);
+  const { onCopy, hasCopied } = useClipboard(two_factor_hash);
 
   const verify2FA = async (otp: string) => {
     try {
@@ -70,17 +70,6 @@ export const Setup2FA: React.FC<{
       console.log(e);
       setIsLoading(false);
     }
-  };
-
-  const onCopyLink = () => {
-    setCopied(true);
-    navigator.clipboard.writeText(two_factor_hash).then(
-      () => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      },
-      () => console.log("Could not copy to clipboard")
-    );
   };
 
   return (
@@ -170,10 +159,10 @@ export const Setup2FA: React.FC<{
                           {two_factor_hash}
                         </Text>
 
-                        {copied ? (
+                        {hasCopied ? (
                           <CheckIcon cursor="pointer" color="#38CB89" />
                         ) : (
-                          <CopyIcon cursor="pointer" onClick={onCopyLink} />
+                          <CopyIcon cursor="pointer" onClick={onCopy} />
                         )}
                       </HStack>
                     </PopoverBody>
