@@ -152,11 +152,7 @@ const Home: React.FC = () => {
             }
           } else {
             setImportData(import_scan_details);
-            if (profileData.loc_remaining >= import_scan_details.loc) {
-              onOpen();
-            } else {
-              setOpen(true);
-            }
+            onOpen();
           }
         }
       }
