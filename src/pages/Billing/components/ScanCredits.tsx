@@ -20,18 +20,16 @@ const ScanCredits: React.FC<{
   topUpData: {
     [plan: string]: Plan;
   };
+  handleTabsChange: (index: number) => void;
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
     };
   };
-}> = ({ planData, profile, topUpData, pricingDetails }) => {
+}> = ({ planData, profile, topUpData, pricingDetails, handleTabsChange }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const assetsURL = getAssetsURL();
-  const [optionsSelected, setOptionsSelected] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const currentTopUpPlan = topUpData[profile.current_package];
-  const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
 
   return (
     <Flex w="100%" h={"100%"} flexDir={["column", "column", "column", "row"]}>
@@ -155,8 +153,8 @@ const ScanCredits: React.FC<{
             We have revamped our pricing plans! Top-up your accounts with lines
             of code instead of scan credits now.
           </Text>
-          <Button w="100%" variant="brand">
-            Get LOC Top up now
+          <Button w="100%" onClick={() => handleTabsChange(0)} variant="brand">
+            Checkout New Pricing Plans
           </Button>
         </VStack>
       </Flex>

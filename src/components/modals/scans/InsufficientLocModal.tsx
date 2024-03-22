@@ -116,10 +116,11 @@ const InsufficientLocModal: React.FC<{
                         </Text>
                       </VStack>
                     )}
-
-                    <Box display={["none", "none", "flex"]} w="250px">
-                      <LOCInfoContainer view="insufficient_scan_modal" />
-                    </Box>
+                    {profileData && profileData?.credit_system === "loc" && (
+                      <Box display={["none", "none", "flex"]} w="250px">
+                        <LOCInfoContainer view="insufficient_scan_modal" />
+                      </Box>
+                    )}
                   </HStack>
                 </VStack>
               </HStack>

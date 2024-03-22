@@ -39,7 +39,9 @@ const PricingDetailsList: React.FC<{
               item={{
                 title: "Lines Of Code",
                 icon: "common/loc-code.svg",
-                tooltipText: `Scan up to ${plan.loc} lines of code with zero limitation on the number of projects scanned.`,
+                tooltipText: `Scan ${
+                  plan.name === "custom" ? "" : `up to ${plan.loc} lines of`
+                } code with zero limitation on the number of projects.`,
               }}
               mouseHover
             />

@@ -30,7 +30,9 @@ const Billing: React.FC = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const tab = searchParams.get("tab") || "billing";
-  const tabIndex = billingTabs.findIndex((item) => item === tab);
+  const [tabIndex, setTabIndex] = React.useState(
+    billingTabs.findIndex((item) => item === tab)
+  );
 
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
@@ -99,6 +101,10 @@ const Billing: React.FC = () => {
     setCompletePaymentOpen(false);
   };
 
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index);
+  };
+
   const onUpgradePlan = () => {
     if (pricingRef.current) {
       pricingRef.current.scrollIntoView({
@@ -146,6 +152,8 @@ const Billing: React.FC = () => {
         ) : (
           <Tabs
             mt={[3, 3, 5]}
+            index={tabIndex}
+            onChange={handleTabsChange}
             mx={0}
             px={0}
             w={"100%"}
@@ -318,6 +326,7 @@ const Billing: React.FC = () => {
                         />
                       ) : (
                         <ScanCredits
+                          handleTabsChange={handleTabsChange}
                           planData={
                             plans.pricing_data[planBillingCycle][
                               profileData.current_package
